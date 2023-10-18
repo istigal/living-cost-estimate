@@ -1,0 +1,124 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <title>Living cost estimate</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="container form-container">
+        <h1>Cost of living and prices</h1>
+        <p>Enter the city name you are looking for</p>
+        <form id="form" class="form mb-5" method="post" action="/">
+          <div class="input-group">
+            <input
+              type="search"
+              name="city-name"
+              class="form-control rounded"
+              placeholder="City"
+              aria-label="Search"
+              aria-describedby="search-addon"
+            />
+            <button type="submit" class="btn btn-outline-primary" method="post" action="/">
+              Search
+            </button>
+          </div>
+        </form>
+        <% if (locals.error) { %>
+        <p class="error"><%= error %></p>
+        <% } %>
+        <div>
+          <form
+            id="selectedLinkForm"
+            action="/prices"
+            method="post"
+            style="display: none"
+          >
+            <input type="text" name="selectedLink" id="selectedLinkInput" />
+          </form>
+
+          <% if (locals.cities) { %>
+          <h2>Search results:</h2>
+          <ul class="list-group my-5">
+            <% cities.forEach(city => { %>
+            <li class="list-group-item">
+              <a
+                href="#"
+                onclick="selectLink('<%= city.city_name %>,<%= city.country_name %>')"
+                ><%= city.city_name %>, <%= city.country_name %></a
+              >
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+      <% if (locals.data) { %>
+      <div class="container mb-4">
+        <h2><%= data.city_name %> - <%= data.country_name %></h2>
+        <table class="table table-striped table-hover my-5">
+          <tr>
+            <th>Category</th>
+            <th>Goods</th>
+            <th>Average Price</th>
+            <th>Currency 
+                <form id="myForm" action="/currency" method="post">
+                <select id="selectOption" name="selectedValue">
+                  <option value="<%= curr %>"><%= curr %></option>
+                  <option value="<%= data.prices[0].currency_code %>"><%= data.prices[0].currency_code %></option>
+                  <% Object.keys(data.exchange_rate).forEach(key => { %>
+                    <option value="<%= key %>"><%= key %></option>
+                    <% }) %>
+                </select>
+              </form></th>
+          </tr>
+          <% data.prices.forEach(item => { %>
+            
+          <tr>
+            <td><%= item.category_name %></td>
+            <td><%= item.item_name %></td>
+            <% if (item.measure == 'money') {%>
+                <td><%= Math.round(item.avg * multiplier * 100) / 100 %></td>
+                <td><%= curr %></td>
+            <% } else { %>
+                <td><%= item.avg %></td>
+                <td>%</td>
+            <% } %>
+          </tr>
+          <% }) %>
+        </table>
+      </div>
+      <% } %>
+    </div>
+    <footer class="my-4">
+      <hr />
+      <p class="mt-4">Copyright © <%- new Date().getFullYear() %> Istvan Gal</p>
+    </footer>
+
+    <script>
+      function selectLink(link) {
+        document.getElementById("selectedLinkInput").value = link;
+        document.getElementById("selectedLinkForm").submit();
+      }
+    </script>
+    <script>
+        const selectOption = document.getElementById('selectOption');
+        const myForm = document.getElementById('myForm');
+        selectOption.addEventListener('change', function() {
+          myForm.submit();
+        });
+      </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

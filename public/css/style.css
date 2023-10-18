@@ -1,0 +1,51 @@
+body {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('/img/tbg.jpg');
+}
+
+.main {
+  min-height: 85vh;
+}
+
+h1 {
+  margin: 50px 0;
+}
+
+.form-container {
+  width: 450px;
+  text-align: center;
+}
+
+.form {
+  margin-bottom: 30px;
+}
+
+a {
+  text-decoration: none;
+}
+
+table {
+  background-color: white;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+  background-color: rgba(125, 196, 255, 0.2);
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: rgba(125, 181, 255, 0.3);
+}
+
+.error {
+  color: red;
+}
+
+footer {
+  text-align: center;
+}
+
+
+@media only screen and (max-width: 450px) {
+  .form-container {
+    width: 100%;
+  }
+}
